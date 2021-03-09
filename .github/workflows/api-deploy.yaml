@@ -7,6 +7,7 @@ on:
       - "api/**"
       - "Dockerfile"
       - ".github/workflows/**"
+
 # Environment variables available to all jobs and steps in this workflow
 env:
   CONTAINER_REPO: hdoupe

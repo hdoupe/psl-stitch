@@ -1,8 +1,8 @@
 import setuptools
 import os
 
-with open("README.md", "r") as f:
-    long_description = f.read()
+# with open("README.md", "r") as f:
+#     long_description = f.read()
 
 setuptools.setup(
     name="psl-stitch",
@@ -17,9 +17,7 @@ setuptools.setup(
     install_requires=[
         "paramtools",
         "httpx",
-        "fastapi[uvicorn]",
-        "pydantic",
-        "cs-kit @ git+ssh://git@github.com/compute-tooling/compute-studio-kit@async#egg=psl_stitch",
+        # "cs-kit @ git+ssh://git@github.com/compute-tooling/compute-studio-kit@async#egg=psl_stitch",
     ],
     include_package_data=True,
     classifiers=[

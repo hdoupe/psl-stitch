@@ -37,10 +37,10 @@ jobs:
           node-version: "12"
 
       - name: Install yarn
-        run: npm install yarn
+        run: cd psl-stitch-app && npm install yarn
 
       - name: Create app bundle
-        run: yarn install && yarn build
+        run: cd psl-stitch-app && yarn install && yarn build
 
       - name: Deploy app to Github Pages
-        run: yarn deploy
+        run: cd psl-stitch-app && yarn deploy

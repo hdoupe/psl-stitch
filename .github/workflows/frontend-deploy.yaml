@@ -1,0 +1,46 @@
+name: Frontend Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "predict-app/**"
+      - ".github/workflows/frontend-deploy.yaml"
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  GITHUB_SHA: ${{ github.sha }}
+
+  GKE_PROJECT: ${{ secrets.DEV_GKE_PROJECT }}
+  GKE_EMAIL: ${{ secrets.DEV_GKE_EMAIL }}
+  GKE_ZONE: us-central1-c
+  GKE_CLUSTER: cluster-1
+  REGISTRY_HOSTNAME: gcr.io
+
+  PROJECT: ${{ secrets.DEV_GKE_PROJECT }}
+  HOST: dev.compute.studio
+  TAG: ${{ github.sha }}
+
+  CS_CONFIG: ${{ secrets.DEV_CS_CONFIG }}
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Test, Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+
+      - name: Install yarn
+        run: npm install yarn
+
+      - name: Create app bundle
+        run: yarn install && yarn build
+
+      - name: Deploy app to Github Pages
+        run: yarn deploy

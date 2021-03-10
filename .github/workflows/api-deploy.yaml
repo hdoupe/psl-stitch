@@ -6,7 +6,7 @@ on:
       - "psl_stitch/**"
       - "api/**"
       - "Dockerfile"
-      - ".github/workflows/**"
+      - ".github/workflows/api-deploy.yaml"
 
 # Environment variables available to all jobs and steps in this workflow
 env:

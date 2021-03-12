@@ -4,7 +4,7 @@ COPY ./requirements.txt ./requirements.txt
 COPY ./conda-requirements.txt ./conda-requirements.txt
 
 RUN conda config --append channels conda-forge && \
-    conda install -r ./conda-requirements.txt && \
+    conda install --file ./conda-requirements.txt && \
     pip install -r ./requirements.txt
 
 COPY ./setup.py /setup.py

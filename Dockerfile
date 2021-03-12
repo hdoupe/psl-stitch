@@ -2,7 +2,7 @@ FROM continuumio/miniconda3
 
 RUN conda config --append channels conda-forge && \
     conda install taxcalc paramtools && \
-    pip install fastapi uvicorn python-jose[cryptography]
+    pip install fastapi uvicorn python-jose[cryptography] python-dotenv
 
 RUN pip install "git+https://github.com/compute-tooling/compute-studio-kit.git@async#egg=cs_kit"
 

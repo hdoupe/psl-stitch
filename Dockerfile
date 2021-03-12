@@ -1,10 +1,11 @@
 FROM continuumio/miniconda3
 
-RUN conda config --append channels conda-forge && \
-    conda install taxcalc paramtools && \
-    pip install fastapi uvicorn python-jose[cryptography] python-dotenv
+RUN COPY ./requirements.txt /requirements.txt
+RUN COPY ./conda-requirements.txt /conda-requirements.txt
 
-RUN pip install "git+https://github.com/compute-tooling/compute-studio-kit.git@async#egg=cs_kit"
+RUN conda config --append channels conda-forge && \
+    conda install -r /conda-requirements.txt && \
+    pip install -r /requirements.txt
 
 COPY ./setup.py /setup.py
 COPY ./psl_stitch /psl_stitch

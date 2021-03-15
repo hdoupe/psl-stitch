@@ -144,7 +144,7 @@ const SimComponent: React.FC<{
     if (!model_pk) return;
     clearTimeout(inputsTimers[app]);
     pollInputs(app, model_pk, inputs, setInputs);
-  }, [model_pk]);
+  }, [app, model_pk, inputs]);
 
   useEffect(() => {
     if (!model_pk || !inputs) return;
@@ -154,7 +154,7 @@ const SimComponent: React.FC<{
     }
     clearTimeout(simTimers[app]);
     pollSim(app, model_pk, inputs, sim, setSim);
-  }, [model_pk, inputs?.status]);
+  }, [app, model_pk, inputs, sim]);
 
   return (
     <Row className="py-2">
@@ -186,7 +186,6 @@ const SimComponent: React.FC<{
 };
 
 export const Stitch: React.FC<{}> = () => {
-  const [me, setMe] = React.useState<Me>();
   const [results, setResults] = React.useState<Array<AppResponse>>();
 
   const fetchConnect = useCallback(async () => {
@@ -196,7 +195,6 @@ export const Stitch: React.FC<{}> = () => {
       if (me.status === "anon") {
         window.location.href = "/connect/";
       }
-      setMe(me);
     } catch (error) {
       console.log(error);
       if (error.response.status === 403) {

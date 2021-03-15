@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect } from "react";
-import axios from "axios";
 import { Container, Jumbotron } from "react-bootstrap";
 
 import client from "./ApiClient";

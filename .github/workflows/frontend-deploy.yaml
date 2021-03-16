@@ -8,22 +8,6 @@ on:
       - "psl-stitch-app/**"
       - ".github/workflows/frontend-deploy.yaml"
 
-# Environment variables available to all jobs and steps in this workflow
-env:
-  GITHUB_SHA: ${{ github.sha }}
-
-  GKE_PROJECT: ${{ secrets.DEV_GKE_PROJECT }}
-  GKE_EMAIL: ${{ secrets.DEV_GKE_EMAIL }}
-  GKE_ZONE: us-central1-c
-  GKE_CLUSTER: cluster-1
-  REGISTRY_HOSTNAME: gcr.io
-
-  PROJECT: ${{ secrets.DEV_GKE_PROJECT }}
-  HOST: dev.compute.studio
-  TAG: ${{ github.sha }}
-
-  CS_CONFIG: ${{ secrets.DEV_CS_CONFIG }}
-
 jobs:
   setup-build-publish-deploy:
     name: Setup, Build, Test, Publish
@@ -42,5 +26,12 @@ jobs:
       - name: Create app bundle
         run: cd psl-stitch-app && yarn install && yarn build
 
-      - name: Deploy app to Github Pages
-        run: cd psl-stitch-app && yarn deploy
+      - name: Build static files for app
+        run: cd psl-stitch-app && yarn build
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: psl-stitch-app/build # The folder the action should deploy.

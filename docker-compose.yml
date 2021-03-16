@@ -35,11 +35,11 @@ services:
       - "traefik.http.routers.psl-stitch-api.entrypoints=websecure"
       - "traefik.http.routers.psl-stitch-api.tls.certresolver=myresolver"
 
-  node:
+  psl-stitch-app:
     image: "${REPO}/psl-stitch-app:${TAG}"
     container_name: "psl-stitch-app"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.psl-stitch-api.rule=Host(`stitch.hankdoupe.com`)"
-      - "traefik.http.routers.psl-stitch-api.entrypoints=websecure"
-      - "traefik.http.routers.psl-stitch-api.tls.certresolver=myresolver"
+      - "traefik.http.routers.psl-stitch-app.rule=Host(`stitch.hankdoupe.com`)"
+      - "traefik.http.routers.psl-stitch-app.entrypoints=websecure"
+      - "traefik.http.routers.psl-stitch-app.tls.certresolver=myresolver"

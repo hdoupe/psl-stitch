@@ -15,11 +15,16 @@ name_mappings = {
 
 
 def get_clients(bearer_token=None):
+    kwargs = {}
+    if bearer_token is not None:
+        kwargs = {"token_type": "Bearer", "api_token": bearer_token}
     clients = {
-        "PSLmodels/Tax-Brain": cs_kit.ComputeStudio("PSLmodels", "Tax-Brain"),
-        "PSLmodels/Tax-Cruncher": cs_kit.ComputeStudio("PSLmodels", "Tax-Cruncher"),
+        "PSLmodels/Tax-Brain": cs_kit.ComputeStudio("PSLmodels", "Tax-Brain", **kwargs),
+        "PSLmodels/Tax-Cruncher": cs_kit.ComputeStudio(
+            "PSLmodels", "Tax-Cruncher", **kwargs
+        ),
         "PSLmodels/Cost-of-Capital-Calculator": cs_kit.ComputeStudio(
-            "PSLmodels", "Cost-of-Capital-Calculator"
+            "PSLmodels", "Cost-of-Capital-Calculator", **kwargs
         ),
     }
     if bearer_token is not None:

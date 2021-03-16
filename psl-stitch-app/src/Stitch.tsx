@@ -144,7 +144,7 @@ const SimComponent: React.FC<{
     if (!model_pk) return;
     clearTimeout(inputsTimers[app]);
     pollInputs(app, model_pk, inputs, setInputs);
-  }, [app, model_pk, inputs]);
+  }, [model_pk]);
 
   useEffect(() => {
     if (!model_pk || !inputs) return;
@@ -154,7 +154,7 @@ const SimComponent: React.FC<{
     }
     clearTimeout(simTimers[app]);
     pollSim(app, model_pk, inputs, sim, setSim);
-  }, [app, model_pk, inputs, sim]);
+  }, [model_pk, inputs?.status]);
 
   return (
     <Row className="py-2">

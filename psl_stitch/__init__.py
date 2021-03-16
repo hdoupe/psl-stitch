@@ -27,9 +27,7 @@ def get_clients(bearer_token=None):
             "PSLmodels", "Cost-of-Capital-Calculator", **kwargs
         ),
     }
-    if bearer_token is not None:
-        for client in clients.values():
-            client.auth_header = {"Authorization": f"Bearer {bearer_token}"}
+    print("created clients")
     return clients
 
 

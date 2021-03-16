@@ -12,6 +12,7 @@ on:
 env:
   CONTAINER_REPO: hdoupe
   IMAGE_NAME: psl-stitch-api
+  CONTAINER_NAME: ${IMAGE_NAME}
 
 jobs:
   build:
@@ -34,3 +35,8 @@ jobs:
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/${CONTAINER_REPO}/${IMAGE_NAME}:$(echo $GITHUB_SHA | head -c7)
+
+      - name: Update service
+        run: |
+        doctl compute ssh ${{secrets.DIGITALOCEAN_DROPLET}} --ssh-command 'cd psl-stitch && git pull origin main'
+        doctl compute ssh ${{secrets.DIGITALOCEAN_DROPLET}} --ssh-command 'cd psl-stitch && ./scripts/deploy.sh'

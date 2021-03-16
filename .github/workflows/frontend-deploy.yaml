@@ -8,6 +8,11 @@ on:
       - "psl-stitch-app/**"
       - ".github/workflows/frontend-deploy.yaml"
 
+env:
+  CONTAINER_REPO: hdoupe
+  IMAGE_NAME: psl-stitch-app
+  CONTAINER_NAME: ${IMAGE_NAME}
+
 jobs:
   setup-build-publish-deploy:
     name: Setup, Build, Test, Publish
@@ -16,22 +21,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v1
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          node-version: "12"
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Install yarn
-        run: cd psl-stitch-app && npm install yarn
+      - name: Build container image
+        run: docker build -t registry.digitalocean.com/${CONTAINER_REPO}/${IMAGE_NAME}:$(echo $GITHUB_SHA | head -c7) .
 
-      - name: Create app bundle
-        run: cd psl-stitch-app && yarn install && yarn build
+      - name: Log in to DigitalOcean Container Registry
+        run: doctl registry login --expiry-seconds 1200
 
-      - name: Build static files for app
-        run: cd psl-stitch-app && yarn build
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/${CONTAINER_REPO}/${IMAGE_NAME}:$(echo $GITHUB_SHA | head -c7)
 
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: psl-stitch-app/build # The folder the action should deploy.
+      - name: Update service
+        run: |
+        doctl compute ssh ${{secrets.DIGITALOCEAN_DROPLET}} --ssh-command 'cd psl-stitch && git pull origin main'
+        doctl compute ssh ${{secrets.DIGITALOCEAN_DROPLET}} --ssh-command 'cd psl-stitch && ./scripts/deploy.sh'

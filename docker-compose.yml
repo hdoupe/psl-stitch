@@ -1,0 +1,45 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.4"
+    container_name: "traefik"
+    command:
+      # - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=hank@hankdoupe.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  psl-stitch-api:
+    image: "${REPO}/psl-stitch-api:${TAG}"
+    container_name: "psl-stitch-api"
+    volumes:
+      - "./.env:/.env"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.psl-stitch-api.rule=Host(`stitchapi.hankdoupe.com`)"
+      - "traefik.http.routers.psl-stitch-api.entrypoints=websecure"
+      - "traefik.http.routers.psl-stitch-api.tls.certresolver=myresolver"
+
+  node:
+    image: "${REPO}/psl-stitch-app:${TAG}"
+    container_name: "psl-stitch-app"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.psl-stitch-api.rule=Host(`stitch.hankdoupe.com`)"
+      - "traefik.http.routers.psl-stitch-api.entrypoints=websecure"
+      - "traefik.http.routers.psl-stitch-api.tls.certresolver=myresolver"
